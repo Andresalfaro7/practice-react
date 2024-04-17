@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-const ModalAddProduct = (props) => {
+const ModalEditProduct = (props) => {
 
     const dataProductInit = {
-        name: "",
-        description: "",
-        price: 0
+        nombre: "",
+        descripcion: "",
+        precio: 0
     }
 
     let config = {
@@ -20,6 +20,12 @@ const ModalAddProduct = (props) => {
 
     const [dataProduct, setDataProduct] = useState(dataProductInit);
 
+    const getProduct = async() =>{
+        const res = await axios.get(`${apiUrl}/productos/${props.idEdit}`, config);
+        console.log(res);
+        setDataProduct(res.data);
+    }
+
     const handelChange = (e) =>{
         console.log(dataProduct);
         setDataProduct({...dataProduct, [e.target.name]: e.target.value});
@@ -27,16 +33,20 @@ const ModalAddProduct = (props) => {
 
     const handelSubmit = async(e) =>{
         e.preventDefault();
-        await axios.post(`${apiUrl}/productos`, dataProduct, config)
+        await axios.put(`${apiUrl}/productos/${props.idEdit}`, dataProduct, config)
         .then(response =>{
             console.log(response);
         })
         .catch(err =>{
             console.log(err);
         });
-        props.setShowModal(false);
+        props.setShowModalEdit(false);
         props.getAllProducts();
     }
+
+    useEffect(()=>{
+        getProduct();
+    },[]);
 
     return (
         <>
@@ -49,11 +59,11 @@ const ModalAddProduct = (props) => {
                         {/*header*/}
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                             <h3 className="text-3xl font-semibold">
-                                Agregar producto
+                                Editar producto
                             </h3>
                             <button
                                 className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                                onClick={() => props.setShowModal(false)}
+                                onClick={() => props.setShowModalEdit(false)}
                             >
                                 <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
                                     ×
@@ -69,19 +79,21 @@ const ModalAddProduct = (props) => {
                                         <input
                                             className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                             type="text"
-                                            id="name"
-                                            name="name"
+                                            id="nombre"
+                                            name="nombre"
+                                            value={dataProduct.nombre}
                                             onChange={handelChange}
                                             placeholder="Ingresar nombre del producto"
                                             required
                                         />
                                     </div>
                                     <div className="mb-4">
-                                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
+                                        <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
                                         <textarea
                                             className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                            id="password"
-                                            name="description"
+                                            id="descripcion"
+                                            name="descripcion"
+                                            value={dataProduct.descripcion}
                                             onChange={handelChange}
                                             required
                                         ></textarea>
@@ -91,8 +103,9 @@ const ModalAddProduct = (props) => {
                                         <input
                                             className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                             type="number"
-                                            id="price"
-                                            name="price"
+                                            id="precio"
+                                            name="precio"
+                                            value={dataProduct.precio}
                                             onChange={handelChange}
                                             placeholder="00.00"
                                             required
@@ -103,7 +116,7 @@ const ModalAddProduct = (props) => {
                                         <button
                                             className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                             type="button"
-                                            onClick={() => props.setShowModal(false)}
+                                            onClick={() => props.setShowModalEdit(false)}
                                         >
                                             Close
                                         </button>
@@ -111,7 +124,7 @@ const ModalAddProduct = (props) => {
                                             className="bg-indigo-900 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                             type="submit"
                                         >
-                                            Guardar
+                                            Actualizar
                                         </button>
                                     </div>
                                 </form>
@@ -124,4 +137,4 @@ const ModalAddProduct = (props) => {
         </>
     )
 }
-export default ModalAddProduct;
+export default ModalEditProduct;

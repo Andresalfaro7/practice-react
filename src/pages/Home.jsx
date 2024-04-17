@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ModalAddProduct from '../components/ModalAddProduct';
+import ModalEditProduct from '../components/ModalEditProduct';
 
 const Home = () => {
 
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [showModalEdit, setShowModalEdit] = useState(false);
+    const [idEdit, setIdEdit] = useState(0);
 
     const apiUrl = 'http://localhost/products-api/api.php';
     let config = {
@@ -21,18 +24,26 @@ const Home = () => {
         setData(res.data);
     }
 
+    const openModalEdit = (id) =>{
+        setIdEdit(id);
+        setShowModalEdit(true);
+    }
+
+    const deletProduct = async(id) =>{
+        await axios.delete(`${apiUrl}/productos/${id}`, config)
+        .then(response =>{
+            console.log(response);
+        })
+        .catch(err =>{
+            console.log(err);
+        });
+        setShowModalEdit(false);
+        getAllProducts();
+    }
+
     useEffect(() => {
         getAllProducts();
     }, []);
-    
-    if (10 > 2) {
-        console.log("Si es mayor")
-    } else {
-        console.log("NO es mayor, puede que se ha igual");
-    }
-
-    10 > 2 ? console.log("Si es mayor") : console.log("NO es mayor, puede que se ha igual"); 
-
 
     return (
         <section className="text-gray-600 body-font">
@@ -68,8 +79,8 @@ const Home = () => {
                                     <td className="px-4 py-3">{item.descripcion}</td>
                                     <td className="px-4 py-3 text-lg text-gray-900">{item.precio}</td>
                                     <td className="w-10 text-center flex">
-                                        <button className="inline-flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded">Editar</button>
-                                        <button className="inline-flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded">Eliminar</button>
+                                        <button className="inline-flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded" onClick={()=>{openModalEdit(item.id)}}>Editar</button>
+                                        <button className="inline-flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded" onClick={()=>{deletProduct(item.id)}}>Eliminar</button>
                                     </td>
                                 </tr>
                             ))}
@@ -85,7 +96,8 @@ const Home = () => {
                     <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Button</button>
                 </div>
             </div>
-            {showModal && <ModalAddProduct setShowModal={setShowModal}/>}
+            {showModal && <ModalAddProduct setShowModal={setShowModal} getAllProducts={getAllProducts}/>}
+            {showModalEdit && <ModalEditProduct setShowModalEdit={setShowModalEdit} getAllProducts={getAllProducts} idEdit={idEdit}/>}
         </section>
     );
 }
