@@ -3,14 +3,17 @@ import './App.css';
 import Navbar from "./components/partials/Navbar";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./components/router/Router";
+import { CookiesProvider } from "react-cookie";
 
 function App() {
   
   return (
-    <BrowserRouter>
-      <Navbar/>
-      <Router/>
-    </BrowserRouter>
+    <CookiesProvider>
+      <BrowserRouter>
+        <Navbar/>
+        <Router/>
+      </BrowserRouter>
+    </CookiesProvider>
   );
 }
 

@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import {useCookies} from 'react-cookie'
 
 const ModalEditProduct = (props) => {
+
+    const [myCokkie] = useCookies(['Nombre_de_la_cookie']);
 
     const dataProductInit = {
         nombre: "",
@@ -59,7 +62,7 @@ const ModalEditProduct = (props) => {
                         {/*header*/}
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                             <h3 className="text-3xl font-semibold">
-                                Editar producto
+                                Editar producto {myCokkie.Nombre_de_la_cookie}
                             </h3>
                             <button
                                 className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"

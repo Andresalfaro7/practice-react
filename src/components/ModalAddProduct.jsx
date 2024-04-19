@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import {useCookies} from 'react-cookie'
 
 const ModalAddProduct = (props) => {
 
@@ -19,6 +20,7 @@ const ModalAddProduct = (props) => {
     const apiUrl = 'http://localhost/products-api/api.php';
 
     const [dataProduct, setDataProduct] = useState(dataProductInit);
+    const [, , removeCookie] = useCookies(['Nombre_de_la_cookie']);
 
     const handelChange = (e) =>{
         console.log(dataProduct);
@@ -38,6 +40,10 @@ const ModalAddProduct = (props) => {
         props.getAllProducts();
     }
 
+    const removeCokkieData = () =>{
+        removeCookie('Nombre_de_la_cookie');
+    }
+
     return (
         <>
             <div
@@ -49,7 +55,7 @@ const ModalAddProduct = (props) => {
                         {/*header*/}
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                             <h3 className="text-3xl font-semibold">
-                                Agregar producto
+                                Agregar producto <button onClick={removeCokkieData()}>Quitar Cokkie</button>
                             </h3>
                             <button
                                 className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"

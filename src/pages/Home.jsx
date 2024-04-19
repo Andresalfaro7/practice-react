@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ModalAddProduct from '../components/ModalAddProduct';
 import ModalEditProduct from '../components/ModalEditProduct';
+import { useCookies } from "react-cookie";
 
 const Home = () => {
 
@@ -9,6 +10,8 @@ const Home = () => {
     const [showModal, setShowModal] = useState(false);
     const [showModalEdit, setShowModalEdit] = useState(false);
     const [idEdit, setIdEdit] = useState(0);
+    const [cookies, setCookie] = useCookies(['Nombre_de_la_cookie']);
+
 
     const apiUrl = 'http://localhost/products-api/api.php';
     let config = {
@@ -43,6 +46,7 @@ const Home = () => {
 
     useEffect(() => {
         getAllProducts();
+        setCookie('Nombre_de_la_cookie', 'Esto_es_el_valor_de_la_cookie');
     }, []);
 
     return (
